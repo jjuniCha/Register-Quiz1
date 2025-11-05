@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고등학생 상식 퀴즈</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            position: relative;
+            overflow-x: hidden;
+            padding: 10px;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-50px, -50px); }
+        }
+
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2), 0 0 100px rgba(102, 126, 234, 0.3);
+            padding: 40px 30px;
+            max-width: 750px;
+            width: 100%;
+            text-align: center;
+            animation: slideIn 0.6s ease-out;
+            position: relative;
+            z-index: 1;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            font-size: clamp(1.8em, 5vw, 2.5em);
+            font-weight: 900;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            padding-right: 30px;
+        }
+
+        h1::after {
+            content: '✨';
+            position: absolute;
+            right: -40px;
+            top: -10px;
+            font-size: 0.6em;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 0.8; }
+        }
+
+        .login-container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .login-container h2 {
+            color: #667eea;
+            font-size: clamp(1.5em, 4vw, 2em);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .login-form {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            padding: clamp(20px, 5vw, 40px);
+            margin: 20px 0;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .intro-text {
+            text-align: center;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            font-size: clamp(0.9em, 2.5vw, 1.1em);
+        }
+
+        .intro-text p {
+            margin: 10px 0;
+            transition: transform 0.3s ease;
+        }
+
+        .intro-text p:hover {
+            transform: translateX(5px);
+        }
+
+        .intro-text .highlight {
+            color: #667eea;
+            font-weight: bold;
+            font-size: clamp(1em, 2.8vw, 1.2em);
+        }
+
+        .intro-text .emoji-line {
+            color: #764ba2;
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: clamp(0.95em, 2.6vw, 1.15em);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #667eea;
+            font-size: clamp(0.95em, 2.5vw, 1.1em);
+            transition: all 0.3s ease;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: clamp(12px, 3vw, 15px) clamp(15px, 3.5vw, 20px);
+            border: 3px solid #e0e7ff;
+            border-radius: 15px;
+            font-size: clamp(0.95em, 2.5vw, 1.1em);
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .score-board {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: clamp(15px, 3vw, 20px);
+            border-radius: 20px;
+            margin-bottom: 25px;
+            font-size: clamp(0.95em, 2.5vw, 1.2em);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            font-weight: 600;
+        }
+
+        .user-info {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 12px 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-size: clamp(0.95em, 2.5vw, 1.1em);
+            color: #764ba2;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .difficulty-indicator {
+            display: inline-block;
+            padding: clamp(10px, 2.5vw, 12px) clamp(18px, 4vw, 25px);
+            border-radius: 20px;
+            font-size: clamp(0.85em, 2.2vw, 1em);
+            font-weight: bold;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .difficulty-indicator:hover {
+            transform: translateY(-3px);
+        }
+
+        .easy {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            color: white;
+        }
+
+        .medium {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+        }
+
+        .hard {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .question-container {
+            margin-bottom: 35px;
+            text-align: left;
+        }
+
+        .question {
+            font-size: clamp(1.1em, 3vw, 1.4em);
+            margin-bottom: 20px;
+            color: #2d3748;
+            font-weight: bold;
+            line-height: 1.6;
+            padding: clamp(18px, 4vw, 25px);
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            border-radius: 20px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 3px solid #e0e7ff;
+            border-radius: 18px;
+            padding: clamp(15px, 3.5vw, 20px) clamp(18px, 4vw, 25px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: clamp(0.95em, 2.5vw, 1.15em);
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option:hover {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e5e9ff 100%);
+            border-color: #667eea;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            transform: scale(1.03);
+        }
+
+        .option.correct {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            border-color: #84fab0;
+            color: white;
+            animation: correctPulse 0.6s ease;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .option.wrong {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-color: #f5576c;
+            color: white;
+            animation: wrongShake 0.5s ease;
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: clamp(15px, 3.5vw, 18px) clamp(30px, 6vw, 40px);
+            border-radius: 30px;
+            font-size: clamp(0.95em, 2.5vw, 1.15em);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-bar {
+            background: #e0e7ff;
+            height: 12px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .progress {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+            animation: progressGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes progressGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(102, 126, 234, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.8); }
+        }
+
+        .result-container {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .result-title {
+            font-size: clamp(1.8em, 5vw, 2.5em);
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+            animation: titleBounce 0.8s ease;
+        }
+
+        @keyframes titleBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .final-score {
+            font-size: clamp(2.5em, 7vw, 3.5em);
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 20px 0;
+            animation: scoreReveal 1s ease;
+        }
+
+        @keyframes scoreReveal {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .result-message {
+            font-size: clamp(1.05em, 2.8vw, 1.3em);
+            margin-bottom: 30px;
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        .stats-container {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            padding: clamp(20px, 4vw, 30px);
+            margin: 20px 0;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stats-title {
+            font-size: clamp(1.3em, 3.5vw, 1.7em);
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 800;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 12px 0;
+            padding: 10px 0;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+            font-size: clamp(0.95em, 2.5vw, 1.1em);
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .capture-notice {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: clamp(18px, 4vw, 25px);
+            border-radius: 20px;
+            margin: 20px 0;
+            font-size: clamp(0.95em, 2.5vw, 1.15em);
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4);
+        }
+
+        .capture-notice p {
+            margin: 10px 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+            
+            .quiz-container {
+                padding: 25px 15px;
+                border-radius: 20px;
+            }
+            
+            h1::after {
+                right: -25px;
+                top: -5px;
+                font-size: 0.5em;
+            }
+            
+            .score-board {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+            
+            .option:hover {
+                transform: translateY(-2px) scale(1.01);
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quiz-container {
+                padding: 20px 12px;
+                border-radius: 15px;
+            }
+            
+            .login-form {
+                padding: 20px 15px;
+            }
+            
+            .intro-text {
+                line-height: 1.6;
+            }
+            
+            .intro-text p {
+                margin: 8px 0;
+            }
+            
+            .input-group {
+                margin-bottom: 20px;
+            }
+            
+            .question-container {
+                margin-bottom: 25px;
+            }
+            
+            .options {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>🧠 고등학생 상식 퀴즈</h1>
+        
+        <div id="login-screen">
+            <div class="login-container">
+                <h2>🎮 퀴즈 게임 시작!</h2>
+                <div class="login-form">
+                    <div class="intro-text">
+                        <p class="highlight">고1 수준 상식 퀴즈 도전!</p>
+                        <p>총 10문제, 100점 만점으로 여러분의 상식 실력을 테스트해보세요.</p>
+                        <p>한국사부터 과학까지 다양한 분야에서 출제됩니다.</p>
+                        <p class="emoji-line">재밌게 도전해보세요! 🚀</p>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>📝 학번</label>
+                        <input type="text" id="student-id" placeholder="예: 10101">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>👤 이름</label>
+                        <input type="text" id="student-name" placeholder="예: 홍길동">
+                    </div>
+                    
+                    <button class="btn" onclick="startQuiz()">지금 바로 시작하기!</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="main-content" class="hidden">
+            <div id="quiz-screen">
+                <div class="score-board">
+                    <div>📚 문제: <span id="current-question">1</span> / <span id="total-questions">10</span></div>
+                    <div>⭐ 점수: <span id="current-score">0</span>점</div>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                
+                <div class="question-container">
+                    <div class="difficulty-indicator" id="difficulty-indicator"></div>
+                    <div class="question" id="question-text"></div>
+                    <div class="options" id="options-container"></div>
+                </div>
+                
+                <button class="btn" id="next-btn" onclick="nextQuestion()" disabled>다음 문제 →</button>
+            </div>
+            
+            <div id="result-screen" class="hidden">
+                <div class="result-container">
+                    <div class="result-title">🎉 퀴즈 완료!</div>
+                    <div class="user-info" id="user-result-info"></div>
+                    <div class="final-score" id="final-score">0점</div>
+                    <div class="result-message" id="result-message"></div>
+                    
+                    <div class="stats-container">
+                        <div class="stats-title">📊 이번 게임 결과</div>
+                        <div class="stat-item">
+                            <span>✅ 맞힌 문제</span>
+                            <span id="correct-count">0 / 10</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>⭐ 하 난이도 정답률</span>
+                            <span id="easy-correct">0 / 4</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>⭐⭐ 중 난이도 정답률</span>
+                            <span id="medium-correct">0 / 4</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>⭐⭐⭐ 상 난이도 정답률</span>
+                            <span id="hard-correct">0 / 2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="capture-notice">
+                        📸 결과 저장 안내
+                        <p>• 이 화면을 캡쳐해서 결과를 저장해주세요!</p>
+                    </div>
+                    
+                    <button class="btn" onclick="restartQuiz()">🔄 다시 도전하기</button>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 15px;">
+                        💡 매번 다른 문제가 랜덤으로 출제됩니다
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questionPool = {
+            easy: [
+                {
+                    question: "우리나라의 수도는 어디인가요?",
+                    options: ["부산", "서울", "대구", "인천"],
+                    correct: 1,
+                    difficulty: "easy"
+                },
+                {
+                    question: "지구에서 가장 높은 산은 무엇인가요?",
+                    options: ["에베레스트산", "K2", "한라산", "백두산"],
+                    correct: 0,
+                    difficulty: "easy"
+                },
+                {
+                    question: "태양계에서 가장 큰 행성은 무엇인가요?",
+                    options: ["지구", "화성", "목성", "토성"],
+                    correct: 2,
+                    difficulty: "easy"
+                },
+                {
+                    question: "물의 끓는점은 섭씨 몇 도인가요?",
+                    options: ["-100도", "0도", "100도", "200도"],
+                    correct: 2,
+                    difficulty: "easy"
+                },
+                {
+                    question: "1년은 몇 일인가요? (평년 기준)",
+                    options: ["364일", "365일", "366일", "367일"],
+                    correct: 1,
+                    difficulty: "easy"
+                },
+                {
+                    question: "다음 중 포유동물이 아닌 동물은 무엇인가요?",
+                    options: ["박쥐", "고래", "펭귄", "돌고래"],
+                    correct: 2,
+                    difficulty: "easy"
+                },
+                {
+                    question: "지구의 위성은 무엇인가요?",
+                    options: ["태양", "달", "화성", "금성"],
+                    correct: 1,
+                    difficulty: "easy"
+                },
+                {
+                    question: "한글을 만든 조선의 왕은 누구인가요?",
+                    options: ["태종", "세종대왕", "성종", "중종"],
+                    correct: 1,
+                    difficulty: "easy"
+                }
+            ],
+            medium: [
+                {
+                    question: "세포에서 에너지를 생산하는 세포소기관은 무엇인가요?",
+                    options: ["엽록체", "핵", "미토콘드리아(마이토콘드리아)", "리보솜(라이보솜)"],
+                    correct: 2,
+                    difficulty: "medium"
+                },
+                {
+                    question: "다음 중 우리나라 전통 명절이 아닌 것은 무엇인가요?",
+                    options: ["추석", "설날", "크리스마스", "단오"],
+                    correct: 2,
+                    difficulty: "medium"
+                },
+                {
+                    question: "삼국시대 세 나라가 아닌 것은 무엇인가요?",
+                    options: ["고려", "백제", "고구려", "신라"],
+                    correct: 0,
+                    difficulty: "medium"
+                },
+                {
+                    question: "인간의 몸에서 산소와 이산화탄소를 교환하는 기관은 무엇인가요?",
+                    options: ["심장", "폐", "간", "신장"],
+                    correct: 1,
+                    difficulty: "medium"
+                },
+                {
+                    question: "광합성이 일어나는 세포소기관은?",
+                    options: ["미토콘드리아", "엽록체", "핵", "골지체"],
+                    correct: 1,
+                    difficulty: "medium"
+                },
+                {
+                    question: "원자번호가 1번인 원소는?",
+                    options: ["헬륨", "수소", "리튬", "베릴륨"],
+                    correct: 1,
+                    difficulty: "medium"
+                },
+                {
+                    question: "6.25 전쟁(한국 전쟁)이 일어난 해는 언제인가요?",
+                    options: ["1945년", "1948년", "1950년", "1953년"],
+                    correct: 2,
+                    difficulty: "medium"
+                },
+                {
+                    question: "지구의 자전 주기는 몇일인가요?(소숫점 첫째 자리에서 반올림)",
+                    options: ["약 26일", "약 27일", "약 28일", "약 29일"],
+                    correct: 0,
+                    difficulty: "medium"
+                }
+            ],
+            hard: [
+                {
+                    question: "조선왕조 500년 역사에서 가장 오래 재위한 왕은?",
+                    options: ["세종대왕", "영조", "숙종", "정조"],
+                    correct: 1,
+                    difficulty: "hard"
+                },
+                {
+                    question: "빛의 속도는 초속 약 몇 km인가요?",
+                    options: ["약 30만 km/s", "약 300만 km/s", "약 30만 m/s", "약 3000만 km/s"],
+                    correct: 0,
+                    difficulty: "hard"
+                },
+                {
+                    question: "DNA의 이중나선 구조를 발견한 과학자는? (대표 인물)",
+                    options: ["다윈", "멘델", "왓슨", "파스퇴르"],
+                    correct: 2,
+                    difficulty: "hard"
+                },
+                {
+                    question: "고려를 건국한 왕은?",
+                    options: ["견훤", "궁예", "왕건", "김유신"],
+                    correct: 2,
+                    difficulty: "hard"
+                }
+            ]
+        };
+
+        let questions = [];
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedAnswer = null;
+        let currentUser = { name: '', studentId: '' };
+        let gameData = {
+            correctAnswers: 0,
+            easyCorrect: 0,
+            mediumCorrect: 0,
+            hardCorrect: 0,
+            answers: []
+        };
+
+        function startQuiz() {
+            const studentId = document.getElementById('student-id').value.trim();
+            const studentName = document.getElementById('student-name').value.trim();
+            
+            if (!studentId || !studentName) {
+                alert('학번과 이름을 모두 입력해주세요!');
+                return;
+            }
+            
+            currentUser = { name: studentName, studentId: studentId };
+            
+            currentQuestion = 0;
+            score = 0;
+            selectedAnswer = null;
+            gameData = {
+                correctAnswers: 0,
+                easyCorrect: 0,
+                mediumCorrect: 0,
+                hardCorrect: 0,
+                answers: []
+            };
+            
+            questions = [];
+            questions.push(...getRandomQuestions(questionPool.easy, 4));
+            questions.push(...getRandomQuestions(questionPool.medium, 4));
+            questions.push(...getRandomQuestions(questionPool.hard, 2));
+            
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('main-content').classList.remove('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            showQuestion();
+        }
+
+        function getRandomQuestions(pool, count) {
+            const shuffled = [...pool];
+            shuffleArray(shuffled);
+            return shuffled.slice(0, count);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            
+            document.getElementById('question-text').textContent = question.question;
+            document.getElementById('current-question').textContent = currentQuestion + 1;
+            document.getElementById('total-questions').textContent = questions.length;
+            document.getElementById('current-score').textContent = score;
+            
+            const difficultyIndicator = document.getElementById('difficulty-indicator');
+            if (question.difficulty === 'easy') {
+                difficultyIndicator.textContent = '⭐ 하 난이도 (7점)';
+                difficultyIndicator.className = 'difficulty-indicator easy';
+            } else if (question.difficulty === 'medium') {
+                difficultyIndicator.textContent = '⭐⭐ 중 난이도 (10점)';
+                difficultyIndicator.className = 'difficulty-indicator medium';
+            } else {
+                difficultyIndicator.textContent = '⭐⭐⭐ 상 난이도 (16점)';
+                difficultyIndicator.className = 'difficulty-indicator hard';
+            }
+            
+            const progress = ((currentQuestion) / questions.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            document.getElementById('next-btn').disabled = true;
+            selectedAnswer = null;
+        }
+
+        function selectAnswer(answerIndex) {
+            if (selectedAnswer !== null) return;
+            
+            selectedAnswer = answerIndex;
+            const question = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach((option, index) => {
+                if (index === question.correct) {
+                    option.classList.add('correct');
+                } else if (index === answerIndex && answerIndex !== question.correct) {
+                    option.classList.add('wrong');
+                }
+                option.style.cursor = 'default';
+            });
+            
+            const isCorrect = answerIndex === question.correct;
+            gameData.answers.push({
+                question: currentQuestion,
+                correct: isCorrect,
+                difficulty: question.difficulty
+            });
+            
+            if (isCorrect) {
+                gameData.correctAnswers++;
+                if (question.difficulty === 'easy') {
+                    score += 7;
+                    gameData.easyCorrect++;
+                } else if (question.difficulty === 'medium') {
+                    score += 10;
+                    gameData.mediumCorrect++;
+                } else {
+                    score += 16;
+                    gameData.hardCorrect++;
+                }
+                document.getElementById('current-score').textContent = score;
+            }
+            
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            
+            document.getElementById('user-result-info').textContent = 
+                `${currentUser.studentId} ${currentUser.name}`;
+            
+            document.getElementById('final-score').textContent = score + '점';
+            
+            const easyTotal = gameData.answers.filter(a => a.difficulty === 'easy').length;
+            const mediumTotal = gameData.answers.filter(a => a.difficulty === 'medium').length;
+            const hardTotal = gameData.answers.filter(a => a.difficulty === 'hard').length;
+            
+            document.getElementById('correct-count').textContent = `${gameData.correctAnswers} / 10`;
+            document.getElementById('easy-correct').textContent = `${gameData.easyCorrect} / ${easyTotal}`;
+            document.getElementById('medium-correct').textContent = `${gameData.mediumCorrect} / ${mediumTotal}`;
+            document.getElementById('hard-correct').textContent = `${gameData.hardCorrect} / ${hardTotal}`;
+            
+            let message = '';
+            const maxScore = (4 * 7) + (4 * 10) + (2 * 16);
+            const percentage = (score / maxScore) * 100;
+            
+            if (percentage >= 90) {
+                message = '완벽해요! 진정한 상식 박사네요! 🎓✨';
+            } else if (percentage >= 80) {
+                message = '훌륭해요! 어려운 문제까지 잘 풀었어요! 👏';
+            } else if (percentage >= 70) {
+                message = '좋아요! 기본 상식이 탄탄해요! 📚';
+            } else if (percentage >= 50) {
+                message = '괜찮아요! 조금 더 공부해봐요! 💪';
+            } else {
+                message = '아쉬워요! 다시 도전해보세요! 🔥';
+            }
+            
+            document.getElementById('result-message').textContent = message;
+        }
+
+        function restartQuiz() {
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('main-content').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
